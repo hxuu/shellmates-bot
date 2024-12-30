@@ -11,7 +11,7 @@ Welcome to the **Discord Bot** project!
 3. [Installation](#installation)
 4. [Configuration](#configuration)
 5. [Running the Bot](#running-the-bot)
-6. [contributing-related-to-team-work](#contributing)
+6. [Contributing (related to team work)](#contributing-related-to-team-work)
 
 ---
 
@@ -133,5 +133,5 @@ shellmates-bot/
 
 ---
 
-> Important Note: Check `backlog.txt` to find pending tasks and work done so far.
+Important Note: Check `backlog.txt` to find pending tasks and work done so far.
 
