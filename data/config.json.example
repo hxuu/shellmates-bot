@@ -1,0 +1,5 @@
+{
+    "BOT_TOKEN": "your-bot-token-here",
+    "COMMAND_PREFIX": "!",
+    "DEFAULT_TIMEZONE": "UTC"
+}
