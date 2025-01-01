@@ -5,7 +5,10 @@
 - Writing a "Hello, world!" bot with basic commands (`!hello`, `!ping`, `!say`).
 
 ============================================
-## Tasks Yet To Be Done...
+## Tasks Yet To Be Done... (just type your name inside [] to indicate you're working on it)
+
+> Note that all work should be under core/ directory which should be organized per command.
+
 
 ### Core Functionalities
 - [ ] Implement the `!schedule` command to schedule meetings/tasks.
@@ -15,11 +18,13 @@
 - [ ] Implement the `!delete <ID>` command to cancel a specific reminder.
 - [ ] Add a `!help` command to display all available commands and usage examples.
 
+
 ### Reminder Mechanism
 - [ ] Create a background task or scheduler to check for upcoming reminders.
   - Send reminders 10 minutes before events by default.
   - Support customizable lead times (e.g., 30 minutes).
 - [ ] Enable reminders via Direct Messages (DMs) or in specific channels.
+
 
 ### Time Management
 - [ ] Add support for both absolute (`2024-12-30 15:00`) and relative times (`in 2 hours`).
@@ -27,9 +32,11 @@
   - Allow users to set their preferred timezone.
   - Handle automatic timezone conversions.
 
+
 ### Data Handling
-- [ ] Store reminders persistently in `data/config.json` or create a dedicated database file.
+- [ ] Store reminders persistently in `data/reminders.json`.
 - [ ] Add error handling for invalid inputs or missing fields in commands.
+
 
 ### Testing and Documentation
 - [ ] Test all implemented commands thoroughly.
@@ -37,12 +44,6 @@
   - Setting up and running the bot.
   - Using each command with examples.
   - Troubleshooting common issues.
-
-### Innovative Features (Optional)
-- [ ] Explore AI-powered scheduling to suggest optimal meeting times based on Discord activity.
-- [ ] Research integration with external calendars (e.g., Google Calendar).
-- [ ] Add task management capabilities alongside reminders.
-- [ ] Gamify the bot with rewards for meeting participation or task completion.
 
 ============================================
 
