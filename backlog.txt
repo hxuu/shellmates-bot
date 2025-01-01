@@ -20,10 +20,10 @@
 
 
 ### Reminder Mechanism
-- [ ] Create a background task or scheduler to check for upcoming reminders.
+- [ Nabil ] Create a background task or scheduler to check for upcoming reminders.
   - Send reminders 10 minutes before events by default.
   - Support customizable lead times (e.g., 30 minutes).
-- [ ] Enable reminders via Direct Messages (DMs) or in specific channels.
+- [ Nabil ] Enable reminders via Direct Messages (DMs) or in specific channels.
 
 
 ### Time Management
