@@ -1,1 +1,48 @@
-Nothing scheduled for now...
+============================================
+## Tasks Done So Far
+
+- Setting up the Discord bot structure.
+- Writing a "Hello, world!" bot with basic commands (`!hello`, `!ping`, `!say`).
+
+============================================
+## Tasks Yet To Be Done...
+
+### Core Functionalities
+- [ ] Implement the `!schedule` command to schedule meetings/tasks.
+  - Parse meeting title/description, date, time, and optional participants from user input.
+  - Validate and store the meeting details in a structured format.
+- [ ] Implement the `!reminders` command to list all upcoming reminders for the user.
+- [ ] Implement the `!delete <ID>` command to cancel a specific reminder.
+- [ ] Add a `!help` command to display all available commands and usage examples.
+
+### Reminder Mechanism
+- [ ] Create a background task or scheduler to check for upcoming reminders.
+  - Send reminders 10 minutes before events by default.
+  - Support customizable lead times (e.g., 30 minutes).
+- [ ] Enable reminders via Direct Messages (DMs) or in specific channels.
+
+### Time Management
+- [ ] Add support for both absolute (`2024-12-30 15:00`) and relative times (`in 2 hours`).
+- [ ] Implement timezone support:
+  - Allow users to set their preferred timezone.
+  - Handle automatic timezone conversions.
+
+### Data Handling
+- [ ] Store reminders persistently in `data/config.json` or create a dedicated database file.
+- [ ] Add error handling for invalid inputs or missing fields in commands.
+
+### Testing and Documentation
+- [ ] Test all implemented commands thoroughly.
+- [ ] Add documentation for:
+  - Setting up and running the bot.
+  - Using each command with examples.
+  - Troubleshooting common issues.
+
+### Innovative Features (Optional)
+- [ ] Explore AI-powered scheduling to suggest optimal meeting times based on Discord activity.
+- [ ] Research integration with external calendars (e.g., Google Calendar).
+- [ ] Add task management capabilities alongside reminders.
+- [ ] Gamify the bot with rewards for meeting participation or task completion.
+
+============================================
+
