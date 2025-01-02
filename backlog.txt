@@ -34,8 +34,8 @@
 
 
 ### Data Handling
-- [ ] Store reminders persistently in `data/reminders.json`.
-- [ ] Add error handling for invalid inputs or missing fields in commands.
+- [ nihad] Store reminders persistently in `data/reminders.json`.
+- [nihad ] Add error handling for invalid inputs or missing fields in commands.
 
 
 ### Testing and Documentation
