@@ -29,8 +29,8 @@
 ### Time Management
 - [ selma] Add support for both absolute (`2024-12-30 15:00`) and relative times (`in 2 hours`).
 - [ selma] Implement timezone support:
-  - Allow users to set their preferred timezone.
-  - Handle automatic timezone conversions.
+  -[selma] Allow users to set their preferred timezone.
+  -[selma] Handle automatic timezone conversions.
 
 
 ### Data Handling
