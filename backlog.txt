@@ -11,11 +11,11 @@
 
 
 ### Core Functionalities []
-- [yasmine ] Implement the `!schedule` command to schedule meetings/tasks.
+- [ ] Implement the `!schedule` command to schedule meetings/tasks.
   - Parse meeting title/description, date, time, and optional participants from user input.
   - Validate and store the meeting details in a structured format.
 - [ ] Implement the `!reminders` command to list all upcoming reminders for the user.
-- [ ] Implement the `!delete <ID>` command to cancel a specific reminder.
+- [yasmine ] Implement the `!delete <ID>` command to cancel a specific reminder.
 - [ yasmine] Add a `!help` command to display all available commands and usage examples.
 
 
