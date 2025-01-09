@@ -3,7 +3,7 @@ from utils.reminders import load_reminders, save_reminders
 
 
 def setup(bot):
-    @bot.command()
+    @bot.hybrid_command()
     async def schedule(ctx, title: str, date: str, time: str):
         try:
             reminder_id = str(uuid.uuid4())
@@ -22,7 +22,7 @@ def setup(bot):
             await ctx.send("❌ Une erreur est survenue lors de la planification.")
             print(f"Erreur : {e}")
 
-    @bot.command()
+    @bot.hybrid_command()
     async def reminders(ctx):
         try:
             reminders = load_reminders()
@@ -38,7 +38,7 @@ def setup(bot):
             await ctx.send("❌ Une erreur est survenue.")
             print(f"Erreur : {e}")
 
-    @bot.command()
+    @bot.hybrid_command()
     async def delete(ctx, reminder_id: str):
         try:
             reminders = load_reminders()

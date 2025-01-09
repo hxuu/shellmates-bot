@@ -3,20 +3,15 @@
 
 - Setting up the Discord bot structure.
 - Writing a "Hello, world!" bot with basic commands (`!hello`, `!ping`, `!say`).
+- Implemented the `!schedule` command to schedule meetings/tasks.
+- Implemented the `!reminders` command to list all upcoming reminders for the user.
+- Implemented the `!delete <ID>` command to cancel a specific reminder.
+- Added a `!help` command to display all available commands and usage examples.
 
 ============================================
 ## Tasks Yet To Be Done... (just type your name inside [] to indicate you're working on it)
 
 > Note that all work should be under core/ directory which should be organized per command.
-
-
-### Core Functionalities []
-- [yasmine ] Implement the `!schedule` command to schedule meetings/tasks.
-  - Parse meeting title/description, date, time, and optional participants from user input.
-  - Validate and store the meeting details in a structured format.
-- [ yasmine] Implement the `!reminders` command to list all upcoming reminders for the user.
-- [yasmine ] Implement the `!delete <ID>` command to cancel a specific reminder.
-- [ yasmine] Add a `!help` command to display all available commands and usage examples.
 
 
 ### Reminder Mechanism
@@ -46,4 +41,5 @@
   - Troubleshooting common issues.
 
 ============================================
+
 
