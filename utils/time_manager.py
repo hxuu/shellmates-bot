@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
-import pytz
 from typing import Optional
+import pytz
+
 
 class TimeManagement:
     def __init__(self):
-        self.timezones = {}  
+        self.timezones = {}
 
     def set_timezone(self, user_id: int, timezone: str) -> tuple[bool, str]:
         """Set user's timezone."""
@@ -21,19 +22,19 @@ class TimeManagement:
             user_tz = pytz.timezone(self.timezones.get(user_id, 'UTC'))
             time_input = time_input.strip().lower()
             current_time = datetime.now(user_tz)
-            
+
             if time_input.startswith('in '):
                 time_parts = time_input[3:].split()
                 if len(time_parts) < 2:
                     return None, "Invalid format. Use 'in X hours/minutes'"
-                
+
                 try:
                     amount = int(time_parts[0])
                     if amount <= 0:
                         return None, "Time amount must be positive"
                 except ValueError:
                     return None, "Invalid number format for time amount"
-                
+
                 unit = time_parts[1].lower()
                 if 'hour' in unit:
                     return current_time + timedelta(hours=amount), "Success"
@@ -49,7 +50,7 @@ class TimeManagement:
                     return specific_time.astimezone(pytz.UTC), "Success"
                 except ValueError:
                     return None, "Invalid format. Use YYYY-MM-DD HH:MM"
-                
+
         except pytz.UnknownTimeZoneError:
             return None, "Error: Invalid timezone specified for user."
         except Exception as e:
