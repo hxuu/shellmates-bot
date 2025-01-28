@@ -17,7 +17,6 @@ def load_reminders():
     try:
         with open(REMINDER_FILE, "r") as file:
             data = json.load(file)
-            print("Successfully loaded reminders")
             return data.get("REMINDERS", [])
     except (json.JSONDecodeError, FileNotFoundError):
         print("No reminders found")
