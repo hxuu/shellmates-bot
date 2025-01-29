@@ -1,24 +1,20 @@
 {
     "REMINDERS": [
         {
-            "id": "4cb1bfc7-1fa1-489c-8cee-e33179d93df4",
+            "id": "51ee2ecc-0fb4-43d9-891a-c0fdac6e696e",
             "user_id": 1023665529862500403,
             "username": "jasmin0061",
-            "channel_id": 1323707897800036384,
-            "title": "test",
-            "date": "2080-01-14",
-            "time": "10:00",
-            "mentions": null
-        },
-        {
-            "id": "c8b5db4f-e6fb-4bf8-b25d-01e04585389b",
-            "user_id": 1023863221549006938,
-            "username": "whoknowsnothing",
-            "channel_id": 1323707897800036384,
-            "title": "testing",
-            "date": "2025-01-16",
-            "time": "19:26",
-            "mentions": null
+            "channel_id": 1324284889998163968,
+            "title": "test2",
+            "description": ".......",
+            "date": "2025-01-29",
+            "time": "18:00",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-01-29 17:55:00"
+            ],
+            "main_time": "2025-01-29 18:00:00"
         }
     ]
 }
