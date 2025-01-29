@@ -1,52 +1,20 @@
 {
     "REMINDERS": [
         {
-            "id": "8ce00146-71ec-426c-bd8f-624c053e86c1",
-            "user_id": 1023863221549006938,
-            "username": "whoknowsnothing",
+            "id": "51ee2ecc-0fb4-43d9-891a-c0fdac6e696e",
+            "user_id": 1023665529862500403,
+            "username": "jasmin0061",
             "channel_id": 1324284889998163968,
-            "title": "test",
-            "description": null,
-            "date": "2025-01-28",
-            "time": "23:50",
+            "title": "test2",
+            "description": ".......",
+            "date": "2025-01-29",
+            "time": "18:00",
             "mentions": "everyone",
             "is_dm": false,
             "reminder_times": [
-                "2025-01-28 23:40:00"
+                "2025-01-29 17:55:00"
             ],
-            "main_time": "2025-01-28 23:50:00"
-        },
-        {
-            "id": "c2e1744e-f17d-40df-819f-47c9f5d3376d",
-            "user_id": 1023863221549006938,
-            "username": "whoknowsnothing",
-            "channel_id": 1324284889998163968,
-            "title": "test_dm",
-            "description": null,
-            "date": "2025-01-28",
-            "time": "23:48",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-28 23:43:00"
-            ],
-            "main_time": "2025-01-28 23:48:00"
-        },
-        {
-            "id": "5c566e53-aca3-470e-b354-c260edc03a91",
-            "user_id": 1023863221549006938,
-            "username": "whoknowsnothing",
-            "channel_id": 1324284889998163968,
-            "title": "DM",
-            "description": null,
-            "date": "2025-01-28",
-            "time": "23:50",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-28 23:45:00"
-            ],
-            "main_time": "2025-01-28 23:50:00"
+            "main_time": "2025-01-29 18:00:00"
         }
     ]
 }
