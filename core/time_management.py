@@ -5,6 +5,8 @@ import discord
 from discord.ext import commands
 from utils.reminders import load_reminders, save_reminders
 from utils.time_manager import *
+from utils.google_calendar import GoogleCalendarManager
+
 
 async def setup(bot):
     """
@@ -16,6 +18,9 @@ class TimeManagementCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.sent_notifications = set()
+        self.calendar_manager = GoogleCalendarManager()
+        self.calendar_manager.authenticate()
+
 
     async def cog_load(self):
         """
@@ -25,91 +30,134 @@ class TimeManagementCog(commands.Cog):
 
     async def check_reminders(self):
         """
-        Tâche en arrière-plan pour vérifier les rappels périodiquement.
+        Enhanced background task for checking reminders.
         """
-        print("Reminder checker function has started!")
+        print("Reminder checker started!")
         await self.bot.wait_until_ready()
-    
-        # Initialize sent_notifications set if it doesn't exist
-        if not hasattr(self, 'sent_notifications'):
-            self.sent_notifications = set()
+        
+        # Initialize notifications cache with TTL
+        from collections import OrderedDict
+        self.sent_notifications = OrderedDict()
+        NOTIFICATION_TTL = 3600  # 1 hour TTL for sent notifications
+        
+        # Add metrics tracking
+        metrics = {
+            'processed_reminders': 0,
+            'sent_notifications': 0,
+            'errors': 0,
+            'cleanup_operations': 0
+        }
 
         while True:
             try:
                 current_time = datetime.now()
                 reminders = load_reminders()
                 reminders_to_remove = []
+                modified_reminders = []
 
+                # Batch process reminders
                 for reminder in reminders:
                     try:
+                        # Add reminder status tracking
+                        reminder_status = {
+                            'id': reminder['id'],
+                            'processing_started': datetime.now(),
+                            'notifications_sent': 0,
+                            'errors': []
+                        }
+
                         reminder_datetime = datetime.fromisoformat(reminder["main_time"])
                         time_until_reminder = reminder_datetime - current_time
 
-                    # Skip processing if the reminder is too old (more than 5 minutes past)
-                        if time_until_reminder.total_seconds() < -300:
+                        # Optimize old reminder cleanup
+                        if time_until_reminder.total_seconds() < -300:  # 5 minutes past
                             reminders_to_remove.append(reminder)
                             continue
 
-                    # Check for reminder times
-                        remaining_times = []
-                        for rt in reminder.get("reminder_times", []):
-                            reminder_time = datetime.fromisoformat(rt)
-                            time_until_notification = reminder_time - current_time
-                        
-                            # Only process future notifications or very recent ones (within last minute)
-                            if time_until_notification.total_seconds() > -60:
-                                notification_key = f"{reminder['id']}_{rt}"
-                            
-                                # If it's time to send and we haven't sent it yet
-                                if time_until_notification.total_seconds() <= 0 and notification_key not in self.sent_notifications:
-                                    await self.send_reminder(reminder)
-                                    self.sent_notifications.add(notification_key)
-                            
-                                # If it's still in the future, keep it
-                                if time_until_notification.total_seconds() > 0:
-                                    remaining_times.append(rt)
+                        # Process reminder times more efficiently
+                        all_times = [(reminder_datetime, 'main')] + [
+                            (datetime.fromisoformat(rt), 'early') 
+                            for rt in reminder.get("reminder_times", [])
+                        ]
 
-                        # Update reminder with remaining future notification times
-                        reminder["reminder_times"] = remaining_times
+                        for check_time, reminder_type in all_times:
+                            time_until = check_time - current_time
+                            seconds_until = time_until.total_seconds()
 
-                        # Check main reminder time
-                        if 0 <= time_until_reminder.total_seconds() <= 60:
-                            main_notification_key = f"{reminder['id']}_main"
-                            if main_notification_key not in self.sent_notifications:
-                                isMain = True
-                                await self.send_reminder(reminder, isMain)
-                                self.sent_notifications.add(main_notification_key)
-                    
-                        # If main time has passed and no remaining notifications, mark for removal
-                        if time_until_reminder.total_seconds() < 0 and not remaining_times:
-                            reminders_to_remove.append(reminder)
+                            # Skip if too far in future or too old
+                            if seconds_until > 3600:  # More than 1 hour away
+                                continue
+                            if seconds_until < -30:  # More than 30 seconds old
+                                continue
+
+                            notification_key = f"{reminder['id']}_{check_time.isoformat()}"
+                            
+                            # More precise timing window
+                            if -1 <= seconds_until <= 3 and notification_key not in self.sent_notifications:
+                                try:
+                                    await self.send_reminder(reminder, reminder_type == 'main')
+                                    self.sent_notifications[notification_key] = current_time
+                                    reminder_status['notifications_sent'] += 1
+                                    metrics['sent_notifications'] += 1
+                                    
+                                    # Cleanup old notification keys
+                                    while len(self.sent_notifications) > 1000:  # Prevent unlimited growth
+                                        self.sent_notifications.popitem(last=False)
+                                        
+                                except Exception as e:
+                                    reminder_status['errors'].append(str(e))
+                                    metrics['errors'] += 1
+                                    continue
+
+                        # Update reminder if modified
+                        if reminder.get('modified'):
+                            modified_reminders.append(reminder)
+                            
+                        metrics['processed_reminders'] += 1
 
                     except Exception as e:
                         print(f"Error processing reminder {reminder.get('id', 'unknown')}: {e}")
+                        metrics['errors'] += 1
                         continue
 
-            # Clean up reminders and sent_notifications
-                if reminders_to_remove:
-                    # Remove old reminders
-                    reminders = [r for r in reminders if r not in reminders_to_remove]
-                
-                    # Clean up sent_notifications for removed reminders
-                    for reminder in reminders_to_remove:
-                        # Remove all notification keys for this reminder
-                        self.sent_notifications = {
-                            key for key in self.sent_notifications 
-                            if not key.startswith(f"{reminder['id']}_")
-                        }
-                
-                    save_reminders(reminders)
+                # Batch update reminders
+                if reminders_to_remove or modified_reminders:
+                    new_reminders = [
+                        r for r in reminders 
+                        if r not in reminders_to_remove
+                    ]
+                    
+                    # Update modified reminders
+                    for mod_reminder in modified_reminders:
+                        reminder_index = next(
+                            (i for i, r in enumerate(new_reminders) 
+                            if r['id'] == mod_reminder['id']), 
+                            None
+                        )
+                        if reminder_index is not None:
+                            new_reminders[reminder_index] = mod_reminder
 
-                    # Log cleanup
-                    print(f"Cleaned up {len(reminders_to_remove)} old reminders")
+                    save_reminders(new_reminders)
+                    metrics['cleanup_operations'] += 1
+
+                # Cleanup expired notification keys
+                current_time = datetime.now()
+                self.sent_notifications = OrderedDict(
+                    (k, v) for k, v in self.sent_notifications.items()
+                    if (current_time - v).total_seconds() < NOTIFICATION_TTL
+                )
+
+                # Log metrics periodically
+                if metrics['processed_reminders'] % 100 == 0:
+                    print(f"Reminder Checker Metrics: {metrics}")
 
             except Exception as e:
-                print(f"Error in reminder checker: {e}")
+                print(f"Critical error in reminder checker: {e}")
+                metrics['errors'] += 1
 
-            await asyncio.sleep(30)  # Check every 30 seconds
+            # Adaptive sleep time based on number of active reminders
+            sleep_time = min(30, max(5, len(reminders) // 10))
+            await asyncio.sleep(sleep_time)
 
     def format_time_until(self, time_delta):
         """
@@ -160,12 +208,20 @@ class TimeManagementCog(commands.Cog):
         mentions: str = commands.param(
             default=None,
             description="Mentionnez des utilisateurs/rôles (ex: @Team @John) - nécessite des permissions"
+        ),
+        add_to_calendar: bool = commands.param(
+            default=False,
+            description="Ajouter l'événement à Google Calendar"
+        ),
+        duration: str = commands.param(
+            default="1h",
+            description="Durée de l'événement (pour Google Calendar)"
         )
 ):
-        try:
+        try:  # <- Début du try
         # Check permissions for mentions
             if mentions:
-        # Split the mentions string and extract user IDs
+            # Split the mentions string and extract user IDs
                 mentioned_users = []
                 mention_parts = mentions.split()
                 for mention in mention_parts:
@@ -177,17 +233,7 @@ class TimeManagementCog(commands.Cog):
                 mentioned_users = []
         
             is_dm_reminder = len(mentioned_users) == 1
-            
 
-            # Permission checks
-            # if is_dm_reminder:
-            #     # Check DM permission
-            #     dm_allowed_role = discord.utils.get(ctx.guild.roles, name="DM Permission")
-            #     if not dm_allowed_role or dm_allowed_role not in ctx.author.roles:
-            #         await ctx.send("❌ Vous n'avez pas la permission d'envoyer des rappels en message privé", ephemeral=True)
-            #         return
-            # else:
-                # Check mention permissions for non-DM reminders
             if mentioned_users:
                 if(len(mentioned_users) == 1) and mentioned_users[0] != ctx.author.id:
                     await ctx.send("❌ Vous ne pouvez planifier un rappel en message privé que pour vous-même.", ephemeral=True)
@@ -298,6 +344,33 @@ class TimeManagementCog(commands.Cog):
                 if description:
                     response += f"\n\n📝 Description : {description}"
                 await ctx.send(response)
+                
+            # Added Google Calendar integration
+            if add_to_calendar:
+                # Calculate end time based on duration
+                end_delta = TimeManagement.parse_relative_time(duration)
+                end_time = reminder_datetime + end_delta
+
+                # Convert mentions to email addresses if needed
+                attendee_emails = []
+                if mentioned_users:
+                    # You'll need to implement a way to map Discord users to emails
+                    # This could be stored in a database or retrieved through user input
+                    pass
+
+                # Create calendar event
+                event_id = await self.calendar_manager.create_event(
+                    title=title,
+                    start_time=reminder_datetime,
+                    end_time=end_time,
+                    description=description,
+                    attendees=attendee_emails
+                )
+
+                if event_id:
+                    response += "\n\n📅 Événement ajouté à Google Calendar"
+                else:
+                    response += "\n\n⚠️ Échec de l'ajout à Google Calendar"
 
         except discord.Forbidden:
             await ctx.send("❌ Je n'ai pas les permissions nécessaires pour effectuer cette action.", ephemeral=True)
