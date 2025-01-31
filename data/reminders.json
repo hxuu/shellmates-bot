@@ -1,116 +1,308 @@
 {
     "REMINDERS": [
         {
-            "id": "00351311-58c2-4a44-8e5c-0e81cc1ca5ee",
+            "id": "fddca6be-9a2f-40a0-a03d-81346bf83798",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "hkgj",
+            "channel_id": null,
+            "title": "grrrr",
             "description": null,
-            "date": "2025-01-30",
-            "time": "15:07",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 15:02:49.613093"
+            "date": "2025-02-01",
+            "time": "04:35",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 15:07:49.613093"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 04:30:51.903791"
+            ],
+            "main_time": "2025-02-01 04:35:51.903791"
         },
         {
-            "id": "5c7294e9-1931-421b-8e02-08469efa51fa",
+            "id": "4468b202-413e-4288-b90d-14e6fe8bce53",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "title",
+            "channel_id": null,
+            "title": "qqq",
             "description": null,
-            "date": "2025-01-30",
-            "time": "15:32",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 15:27:38.386500"
+            "date": "2025-02-01",
+            "time": "04:39",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 15:32:38.386500"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 04:34:42.323527"
+            ],
+            "main_time": "2025-02-01 04:39:42.323527"
         },
         {
-            "id": "0dda4b68-a4a6-496c-b5fb-800c88547407",
+            "id": "03fc7d58-fb85-4c64-8283-d31a608d1af8",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "last test",
+            "channel_id": null,
+            "title": "QQQQ",
             "description": null,
-            "date": "2025-01-30",
-            "time": "17:40",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 17:35:31.762454"
+            "date": "2025-02-01",
+            "time": "04:40",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 17:40:31.762454"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 04:35:52.596854"
+            ],
+            "main_time": "2025-02-01 04:40:52.596854"
         },
         {
-            "id": "2037effa-7ec1-4fc6-82b7-910d3dbf0926",
+            "id": "4d067d00-8f30-4976-910c-aacd6b4ea447",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "teeest",
+            "channel_id": null,
+            "title": "L",
             "description": null,
-            "date": "2025-01-30",
-            "time": "17:57",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 17:52:00.130691"
+            "date": "2025-02-01",
+            "time": "04:42",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 17:57:00.130691"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 04:37:01.235177"
+            ],
+            "main_time": "2025-02-01 04:42:01.235177"
         },
         {
-            "id": "9eaf4574-a273-4343-8d3d-577a23e32838",
+            "id": "a7577f87-e2bf-4811-a628-841d29a1384e",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "ssssss",
+            "channel_id": null,
+            "title": "WOOOOOOOOOW",
             "description": null,
-            "date": "2025-01-30",
-            "time": "22:04",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 21:59:48.480329"
+            "date": "2025-02-01",
+            "time": "09:52",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 22:04:48.480329"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 09:47:50.362417"
+            ],
+            "main_time": "2025-02-01 09:52:50.362417"
         },
         {
-            "id": "b2b9f7ae-2fb9-4fda-b2fc-06e36c739696",
+            "id": "8b42a0a8-9c2b-4aff-8d7d-7cdfb5fdf2c4",
             "user_id": 614274374501138452,
             "username": "ayouubb",
-            "channel_id": 1324284889998163968,
-            "title": "new",
+            "channel_id": null,
+            "title": "WOOOOOOOOOW",
             "description": null,
-            "date": "2025-01-30",
-            "time": "14:25",
-            "mentions": "everyone",
-            "is_dm": false,
-            "reminder_times": [
-                "2025-01-30 14:21:53.959293"
+            "date": "2025-02-01",
+            "time": "09:53",
+            "mentions": [
+                614274374501138452
             ],
-            "main_time": "2025-01-30 14:25:53.959293"
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 09:48:13.867758"
+            ],
+            "main_time": "2025-02-01 09:53:13.867758"
         },
         {
-            "id": "913487b1-9f04-49ee-aeb3-b2ae1d9bf1b2",
+            "id": "bd2c3c97-3494-47ee-8b1c-0aed52f48c52",
             "user_id": 614274374501138452,
             "username": "ayouubb",
             "channel_id": 1324284889998163968,
-            "title": "ll",
+            "title": "RO",
             "description": null,
-            "date": "2025-01-30",
-            "time": "18:23",
+            "date": "2025-02-01",
+            "time": "02:03",
             "mentions": "everyone",
             "is_dm": false,
             "reminder_times": [
-                "2025-01-30 18:18:46.322973"
+                "2025-02-01 01:58:28.435381"
             ],
-            "main_time": "2025-01-30 18:23:46.322973"
+            "main_time": "2025-02-01 02:03:28.435381"
+        },
+        {
+            "id": "bd1409ba-3e18-4447-946d-fb9919cc7bdb",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": null,
+            "title": "RO",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "02:03",
+            "mentions": [
+                614274374501138452
+            ],
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 01:58:45.731605"
+            ],
+            "main_time": "2025-02-01 02:03:45.731605"
+        },
+        {
+            "id": "f149e186-8662-44f1-8417-1eaaff22485d",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": null,
+            "title": ":)",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "03:04",
+            "mentions": [
+                614274374501138452
+            ],
+            "is_dm": true,
+            "reminder_times": [
+                "2025-02-01 02:59:36.550976"
+            ],
+            "main_time": "2025-02-01 03:04:36.550976"
+        },
+        {
+            "id": "e7f7943b-6533-4b68-b9d9-f51724d73837",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "LAST PLS",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "07:15",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 07:10:48.352455"
+            ],
+            "main_time": "2025-02-01 07:15:48.352455"
+        },
+        {
+            "id": "fbe9767b-4cdf-4851-8427-f7162c1e6560",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "gg",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "07:25",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 07:20:28.401700"
+            ],
+            "main_time": "2025-02-01 07:25:28.401700"
+        },
+        {
+            "id": "0fa19ec7-a662-4152-8914-6ae9647b88c3",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "gg",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "07:30",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 07:25:02.319128"
+            ],
+            "main_time": "2025-02-01 07:30:02.319128"
+        },
+        {
+            "id": "1f7868b7-dc2b-4391-b2af-b4833e7c95fd",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "LAST INCHAALAH",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "02:33",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 02:28:39.745274"
+            ],
+            "main_time": "2025-02-01 02:33:39.745274"
+        },
+        {
+            "id": "cbd23ae8-7a3d-4f7c-bd2e-152f52e38963",
+            "user_id": 1271676041139720305,
+            "username": "yasser_110365",
+            "channel_id": 1324284889998163968,
+            "title": "hehe",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "02:34",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 02:29:49.605046"
+            ],
+            "main_time": "2025-02-01 02:34:49.605046"
+        },
+        {
+            "id": "11e8f4cc-d3b6-43fd-ac5a-5efc80e1761d",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "W",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "02:34",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 02:29:54.840049"
+            ],
+            "main_time": "2025-02-01 02:34:54.840049"
+        },
+        {
+            "id": "83695fa5-537a-4d95-b65c-84f7d547eee5",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "Ww",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "02:37",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 02:32:13.243242"
+            ],
+            "main_time": "2025-02-01 02:37:13.243242"
+        },
+        {
+            "id": "da9e9c79-4180-4a7c-b45f-1bfa47b5eb64",
+            "user_id": 1271676041139720305,
+            "username": "yasser_110365",
+            "channel_id": 1324284889998163968,
+            "title": "ho",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "03:41",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 03:36:14.661376"
+            ],
+            "main_time": "2025-02-01 03:41:14.661376"
+        },
+        {
+            "id": "b68e5016-75da-4b74-b77d-2a5089fc82c8",
+            "user_id": 614274374501138452,
+            "username": "ayouubb",
+            "channel_id": 1324284889998163968,
+            "title": "WOOOOO",
+            "description": null,
+            "date": "2025-02-01",
+            "time": "04:41",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-01 04:36:44.755051"
+            ],
+            "main_time": "2025-02-01 04:41:44.755051"
         }
     ]
 }

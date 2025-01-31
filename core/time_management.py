@@ -182,6 +182,30 @@ class TimeManagementCog(commands.Cog):
         if not parts:
             return "moins d'une seconde"
         return ", ".join(parts)
+    
+    def get_emails_for_mention(self, ctx, mention_str: str):
+        user_data = get_user_emails()
+        emails = []
+        missing = []
+
+        # Si mention est @everyone
+        if mention_str.lower() == "everyone":
+            for uid, data in user_data.items():
+                emails.append(data['email'])
+            return emails, missing
+
+        # Si mention est un rôle
+        if mention_str.startswith('<@&'):
+            role_id = ''.join(filter(str.isdigit, mention_str))
+            role = ctx.guild.get_role(int(role_id))
+            if role:
+                for member in role.members:
+                    data = user_data.get(str(member.id))
+                    if data:
+                        emails.append(data['email'])
+                    else:
+                        missing.append(member.name)
+        return emails, missing
 
     @commands.hybrid_command(
     name="schedule",
@@ -219,7 +243,8 @@ class TimeManagementCog(commands.Cog):
         )
 ):
         try:  # <- Début du try
-        # Check permissions for mentions
+            from utils.user_data import get_user_emails
+            # Check permissions for mentions
             if mentions:
             # Split the mentions string and extract user IDs
                 mentioned_users = []
@@ -352,11 +377,40 @@ class TimeManagementCog(commands.Cog):
                 end_time = reminder_datetime + end_delta
 
                 # Convert mentions to email addresses if needed
+                # Remplacer la partie actuelle avec :
                 attendee_emails = []
-                if mentioned_users:
-                    # You'll need to implement a way to map Discord users to emails
-                    # This could be stored in a database or retrieved through user input
-                    pass
+                all_missing = []
+
+                # Récupérer l'email de l'auteur
+                author_data = get_user_emails().get(str(ctx.author.id))
+                if author_data:
+                    attendee_emails.append(author_data['email'])
+
+                if mentioned_users or ctx.message.mention_everyone:
+                    # Gérer @everyone
+                    if ctx.message.mention_everyone:
+                        emails, missing = self.get_emails_for_mention(ctx, "everyone")
+                        attendee_emails.extend(emails)
+                        all_missing.extend(missing)
+                    
+                    # Gérer les rôles mentionnés
+                    for mention in mention_parts:
+                        if mention.startswith('<@&'):
+                            emails, missing = self.get_emails_for_mention(ctx, mention)
+                            attendee_emails.extend(emails)
+                            all_missing.extend(missing)
+
+                # Gérer les utilisateurs directs
+                for user_id in mentioned_users:
+                    user_data = get_user_emails().get(str(user_id))
+                    if user_data:
+                        attendee_emails.append(user_data['email'])
+                    else:
+                        user = self.bot.get_user(user_id)
+                        all_missing.append(user.name if user else str(user_id))
+
+                # Supprimer les doublons
+                attendee_emails = list(set(attendee_emails))
 
                 # Create calendar event
                 event_id = await self.calendar_manager.create_event(
@@ -367,10 +421,16 @@ class TimeManagementCog(commands.Cog):
                     attendees=attendee_emails
                 )
 
+                # Modifier la réponse finale :
                 if event_id:
-                    response += "\n\n📅 Événement ajouté à Google Calendar"
-                else:
-                    response += "\n\n⚠️ Échec de l'ajout à Google Calendar"
+                    response += "\n\n📅 Événement ajouté aux calendriers de :"
+                    response += f"\n- {len(attendee_emails)} participants"
+                    
+                if all_missing:
+                    await ctx.send(
+                        f"⚠️ Ces utilisateurs/roles n'ont pas d'email enregistré : {', '.join(all_missing)}",
+                        ephemeral=True
+                    )
 
         except discord.Forbidden:
             await ctx.send("❌ Je n'ai pas les permissions nécessaires pour effectuer cette action.", ephemeral=True)
@@ -497,3 +557,20 @@ class TimeManagementCog(commands.Cog):
         except Exception as e:
             await ctx.send("❌ Une erreur est survenue.")
             print(f"Erreur : {e}")
+            
+    @commands.hybrid_command(
+        name="register_email",
+        description="🔒 Enregistre ton email Google et tes rôles actuels"
+    )
+    async def register_email(self, ctx, email: str):
+        if '@' not in email or '.' not in email.split('@')[-1]:
+            await ctx.send("❌ Format d'email invalide", ephemeral=True)
+            return
+        
+        # Récupérer les rôles de l'utilisateur (sans @everyone)
+        member = ctx.guild.get_member(ctx.author.id)
+        roles = [role.id for role in member.roles if role.name != "@everyone"]
+        
+        from utils.user_data import save_user_email
+        save_user_email(ctx.author.id, email, roles)
+        await ctx.send("✅ Email et rôles enregistrés avec succès !", ephemeral=True)

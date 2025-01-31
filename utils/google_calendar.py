@@ -12,7 +12,7 @@ from datetime import datetime
 class GoogleCalendarManager:
     """A manager class for Google Calendar operations with better error handling and typing."""
     
-    SCOPES = ['https://www.googleapis.com/auth/calendar.events']
+    SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']
     
     def __init__(self, credentials_path: str = 'credentials.json', token_path: str = 'token.pickle'):
         self.credentials_path = credentials_path
