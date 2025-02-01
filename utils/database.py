@@ -1,6 +1,5 @@
 import sqlite3
 
-
 def init_db():
     conn = sqlite3.connect('./data/dataset.db')
     cursor = conn.cursor()
@@ -16,7 +15,7 @@ def init_db():
     )
     ''')
 
-    # creer activity log table
+    # creer activity log table pour online/offline status
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS activity_log (
         log_id INTEGER PRIMARY KEY AUTOINCREMENT,
