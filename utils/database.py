@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def init_db():
     conn = sqlite3.connect('./data/dataset.db')
     cursor = conn.cursor()
@@ -15,13 +16,24 @@ def init_db():
     )
     ''')
 
-    # creer activity log table pour online/offline status
+    # creer activity log table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS activity_log (
         log_id INTEGER PRIMARY KEY AUTOINCREMENT,
         participant_id INTEGER,
         status TEXT,
         timestamp TEXT,
+        FOREIGN KEY (participant_id) REFERENCES participant_availability(participant_id)
+    )
+    ''')
+
+    # creer daily availability aggregation table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS daily_availability (
+        participant_id INTEGER,
+        date TEXT,
+        online_times TEXT,
+        offline_times TEXT,
         FOREIGN KEY (participant_id) REFERENCES participant_availability(participant_id)
     )
     ''')
