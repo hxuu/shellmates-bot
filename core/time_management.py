@@ -362,7 +362,7 @@ class TimeManagementCog(commands.Cog):
                     f"✅ Événement planifié : {title}\n\n"
                     f"📅 Date : {date} à {time}\n\n"
                     f"⏳ Dans environ {formatted_time}\n\n"
-                    f"Rappels programmés :\n{reminder_times_text}\n\n"
+                    f"Rappels programmés :\n\n{reminder_times_text}\n\n"
                     f"{notification_text}\n\n"
                     f"📢 Les rappels seront envoyés dans ce canal"
                 )
@@ -481,7 +481,7 @@ class TimeManagementCog(commands.Cog):
                 if channel:
                     mentions = " ".join(f"<@{uid}>" for uid in reminder['mentions']) if isinstance(reminder['mentions'], list) else "@everyone"
                     reminder_message += "\n"
-                    await channel.send(f"{reminder_message}\n{mentions}\n\n")
+                    await channel.send(f"{reminder_message}\n{mentions}")
         except Exception as e:
             print(f"Erreur lors de l'envoi du rappel: {e}")
 
