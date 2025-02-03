@@ -1,3 +1,12 @@
+import discord
+from discord.ext import commands
+import uuid  # Pour générer un ID unique pour les rappels
+from datetime import datetime
+
+# Importation de ta fonction de prédiction
+from utils.predict import predict_best_reminder_time
+
+
 def setup(bot):
     # Un simple exemple de hybrid_command
     @bot.hybrid_command()
@@ -11,15 +20,14 @@ def setup(bot):
     @bot.hybrid_command()
     async def say(ctx, *, message):
         await ctx.send(message)
-        
-from predict import predict_best_reminder_time
 
-#commande hybride isolée pour la prédiction du meilleur moment, sans créer de rappel, juste pour tester la fonctionnalité
+
+# Commande hybride isolée pour la prédiction du meilleur moment, sans créer de rappel, juste pour tester la fonctionnalité
 @commands.hybrid_command(
     name="predict_best_reminder_time",
     description="Prédit le meilleur moment pour envoyer un rappel."
 )
-async def predict_best_reminder_time(self, ctx, title: str, date: str, time: str, description: str = None):
+async def predict_best_reminder_time_command(ctx, title: str, date: str, time: str, description: str = None):
     """Commande hybride pour prédire le meilleur moment d'envoi d'un rappel."""
     try:
         # Créer un dictionnaire pour le rappel, sans encore l'enregistrer
@@ -36,7 +44,7 @@ async def predict_best_reminder_time(self, ctx, title: str, date: str, time: str
         }
 
         # Prédire le meilleur moment pour l'envoi
-        best_reminder_time = self.predict_best_reminder_time(reminder)
+        best_reminder_time = predict_best_reminder_time(reminder)
 
         # Envoyer l'heure optimale du rappel prédit
         await ctx.send(f"⏰ Le meilleur moment pour envoyer ce rappel est : **{best_reminder_time}**.")

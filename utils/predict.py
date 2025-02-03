@@ -2,7 +2,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from train_model import MODEL_PATH
+from .train_model import MODEL_PATH
 
 #recap de ce qu'il fait ce code :
 #Charge le modèle XGBoost
