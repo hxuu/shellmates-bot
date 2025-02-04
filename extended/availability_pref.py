@@ -1,8 +1,6 @@
-import discord
 from discord.ext import commands
-import json
-import os
 from utils.user_preferences import load_data_pref ,save_data_pref
+from discord import app_commands
 async def setup(bot):
     await bot.add_cog(AvailabilityCog(bot))
 
@@ -13,7 +11,12 @@ class AvailabilityCog(commands.Cog):
         self.data = load_data_pref(self.data_file)
 
         
-    @commands.hybrid_command(name="set_availability", description="Set your availability preferences")
+    @commands.hybrid_command(name="set_availability", description="Set your availability preferences" )
+    @app_commands.describe(
+        day_of_week  = "jour de la semaine, ex : lundi , mardi ...",
+        start_time = "format HH:MM, optionnel",
+        end_time= "format HH:MM , optionnel"
+    )
     async def set_availability(self,ctx,day_of_week: str, start_time:str , end_time:str):
             """
         Set the user's availability preferences for a specific day of the week.
