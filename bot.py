@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from utils import jeson
 from core import basic, time_management
+from extended import availability_pref
 
 # Charger la configuration du bot
 bot_config = jeson.parse_json('./data/config.json')
@@ -37,7 +38,8 @@ async def on_ready():
 # Charger le module de gestion du temps
 async def main():
     async with bot:
-        await time_management.setup(bot)  
+        await availability_pref.setup(bot)
+        await time_management.setup(bot)
         await bot.start(bot_config['BOT_TOKEN'])
 
 # Lancer le bot

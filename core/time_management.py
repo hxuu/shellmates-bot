@@ -6,7 +6,7 @@ from discord.ext import commands
 from utils.reminders import load_reminders, save_reminders
 from utils.time_manager import *
 from utils.google_calendar import GoogleCalendarManager
-
+from discord import app_commands
 
 async def setup(bot):
     """
@@ -211,6 +211,14 @@ class TimeManagementCog(commands.Cog):
     name="schedule",
     description="📅 Planifie un rappel personnalisé avec mention(s) et rappels anticipés optionnels"
     )
+    @app_commands.describe(
+    title="title of the meeting", 
+    time_spec="AAAA-MM-JJ HH:MM ou format non precise 15m 13h ... ",
+    remind_before = "ex 10m , par défaut : 5 minutes, optionnel",
+    mentions="les utilisateurs concernés, par défaut mentionne tout le monde",
+    add_to_calendar="ajouter l'évenement a google calendar",
+    duration = "dureé de l'évenement"
+    )
     @commands.has_permissions(mention_everyone=True)
     async def schedule(
         self,
@@ -362,7 +370,7 @@ class TimeManagementCog(commands.Cog):
                     f"✅ Événement planifié : {title}\n\n"
                     f"📅 Date : {date} à {time}\n\n"
                     f"⏳ Dans environ {formatted_time}\n\n"
-                    f"Rappels programmés :\n{reminder_times_text}\n\n"
+                    f"Rappels programmés :\n\n{reminder_times_text}\n\n"
                     f"{notification_text}\n\n"
                     f"📢 Les rappels seront envoyés dans ce canal"
                 )
@@ -481,7 +489,7 @@ class TimeManagementCog(commands.Cog):
                 if channel:
                     mentions = " ".join(f"<@{uid}>" for uid in reminder['mentions']) if isinstance(reminder['mentions'], list) else "@everyone"
                     reminder_message += "\n"
-                    await channel.send(f"{reminder_message}\n{mentions}\n\n")
+                    await channel.send(f"{reminder_message}\n{mentions}")
         except Exception as e:
             print(f"Erreur lors de l'envoi du rappel: {e}")
 
@@ -518,6 +526,9 @@ class TimeManagementCog(commands.Cog):
     @commands.hybrid_command(
         name="delete",
         description="Supprime un rappel spécifique par son ID."
+    )
+    @app_commands.describe(
+        reminder_id ="l'id du reminder , vous pouver le trouvez en utilisant la commande reminders"
     )
     async def delete(self, ctx, reminder_id: str):
         try:
@@ -561,6 +572,9 @@ class TimeManagementCog(commands.Cog):
     @commands.hybrid_command(
         name="register_email",
         description="🔒 Enregistre ton email Google et tes rôles actuels"
+    )
+    @app_commands.describe(
+        email = "example@gmail.com"
     )
     async def register_email(self, ctx, email: str):
         if '@' not in email or '.' not in email.split('@')[-1]:
