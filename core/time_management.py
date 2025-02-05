@@ -953,15 +953,15 @@ class TimeManagementCog(commands.Cog):
         except ValueError as ve:
             await ctx.send(f"❌ {str(ve)}", ephemeral=True)
         except Exception as e:
-            await ctx.send("❌ An error occurred.", ephemeral=True)
+            await ctx.send("❌ An error happend.", ephemeral=True)
             print(f"Error: {e}")
 
     @schedule.error
     async def schedule_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send("❌ Vous n'avez pas les permissions nécessaires pour utiliser cette commande.")
+            await ctx.send("❌ You don't have the required permissions to execute this command.")
         else:
-            await ctx.send("❌ Une erreur est survenue lors de l'exécution de la commande.")
+            await ctx.send("❌  An error happened when executing the command.")
 
     async def send_reminder(self, reminder, isMain = False):
         """Helper function to send the reminder with time left"""
@@ -974,7 +974,7 @@ class TimeManagementCog(commands.Cog):
 
         # Prepare the reminder message with time left
                 reminder_message = (
-                f"⏰ Rappel: {reminder['title']}\n\n"
+                f"⏰ Reminder: {reminder['title']}\n\n"
                 )
             else:
                 reminder_message = (
@@ -983,7 +983,7 @@ class TimeManagementCog(commands.Cog):
             if(reminder.get('description')):
                 reminder_message += f"📝 Description: {reminder.get('description')}\n\n"
             if(not isMain):
-                reminder_message+= f"⏳ Temps restant: {time_left_str}\n\n"
+                reminder_message+= f"⏳ Remaining time: {time_left_str}\n\n"
             
 
             if reminder["is_dm"] and len(reminder["mentions"]) == 1:
@@ -999,11 +999,11 @@ class TimeManagementCog(commands.Cog):
                     reminder_message += "\n"
                     await channel.send(f"{reminder_message}\n{mentions}")
         except Exception as e:
-            print(f"Erreur lors de l'envoi du rappel: {e}")
+            print(f"An error happened when sending the reminder: {e}")
 
     @commands.hybrid_command(
         name="reminders",
-        description="Affiche tous vos rappels actifs."
+        description="List the current reminders."
     )
     async def reminders(self, ctx):
         try:
@@ -1011,32 +1011,32 @@ class TimeManagementCog(commands.Cog):
             user_reminders = [r for r in reminders if r["user_id"] == ctx.author.id]
 
             if not user_reminders:
-                await ctx.send("Vous n'avez aucun rappel.")
+                await ctx.send("You don't have any reminders")
                 return
 
             user_reminders.sort(key=lambda r: f"{r['date']} {r['time']}")
-            response = "**Vos rappels actifs :**\n\n"
+            response = "**Your current reminders :**\n\n"
             for i, reminder in enumerate(user_reminders, start=1):
                 reminder_datetime = datetime.fromisoformat(reminder["main_time"])
                 time_until = reminder_datetime - datetime.now()
                 response += (
                     f"{i}. **{reminder['title']}**\n\n"
-                    f"📅 {reminder['date']} à {reminder['time']}\n\n"
-                    f"⏰ Dans {self.format_time_until(time_until)}\n\n"
-                    f"📝 Description: {reminder.get('description', 'Aucune description')}\n\n"
+                    f"📅 {reminder['date']} at {reminder['time']}\n\n"
+                    f"⏰ In {self.format_time_until(time_until)}\n\n"
+                    f"📝 Description: {reminder.get('description', 'No description')}\n\n"
                     f"🆔 ID : {reminder['id']}\n\n"
                 )
             await ctx.send(response)
         except Exception as e:
-            await ctx.send("❌ Une erreur est survenue.")
+            await ctx.send("❌ An error happened.")
             print(f"Erreur : {e}")
 
     @commands.hybrid_command(
         name="delete",
-        description="Supprime un rappel spécifique par son ID."
+        description="Delete a specific reminder using its ID"
     )
     @app_commands.describe(
-        reminder_id ="l'id du reminder , vous pouver le trouvez en utilisant la commande reminders"
+        reminder_id ="The reminder's ID , You can find it using the command reminders"
     )
     async def delete(self, ctx, reminder_id: str):
         try:
@@ -1044,20 +1044,20 @@ class TimeManagementCog(commands.Cog):
             reminder_to_delete = next((r for r in reminders if r["id"] == reminder_id and r["user_id"] == ctx.author.id), None)
 
             if not reminder_to_delete:
-                await ctx.send("❌ Aucun rappel trouvé avec cet ID ou il ne vous appartient pas.")
+                await ctx.send("❌ No reminder using this ID is found.")
                 return
 
             reminders.remove(reminder_to_delete)
             save_reminders(reminders)
-            await ctx.send(f"✅ Rappel supprimé : **{reminder_to_delete['title']}** (ID : {reminder_id})")
+            await ctx.send(f"✅ Deleted reminder : **{reminder_to_delete['title']}** (ID : {reminder_id})")
 
         except Exception as e:
-            await ctx.send("❌ Une erreur est survenue.")
+            await ctx.send("❌ An error happened.")
             print(f"Erreur : {e}")
 
     @commands.hybrid_command(
         name="check_permissions",
-        description="Vérifie les permissions du bot dans ce canal."
+        description="Verify bot permissions."
     )
     async def check_permissions(self, ctx):
         try:
@@ -1069,24 +1069,24 @@ class TimeManagementCog(commands.Cog):
                 ("Mention Everyone", permissions.mention_everyone),
                 ("Manage Messages", permissions.manage_messages),
             ]
-            response = "**Permissions du bot dans ce canal :**\n" + "\n".join(
+            response = "**Bot permissions in this channel :**\n" + "\n".join(
                 f"{'✅' if value else '❌'} {perm}" for perm, value in perms_list
             )
             await ctx.send(response)
         except Exception as e:
-            await ctx.send("❌ Une erreur est survenue.")
+            await ctx.send("❌ An error happened.")
             print(f"Erreur : {e}")
             
     @commands.hybrid_command(
         name="register_email",
-        description="🔒 Enregistre ton email Google et tes rôles actuels"
+        description="🔒 Save your google email and roles"
     )
     @app_commands.describe(
         email = "example@gmail.com"
     )
     async def register_email(self, ctx, email: str):
         if '@' not in email or '.' not in email.split('@')[-1]:
-            await ctx.send("❌ Format d'email invalide", ephemeral=True)
+            await ctx.send("❌ Invalid email format", ephemeral=True)
             return
         
         # Récupérer les rôles de l'utilisateur (sans @everyone)
@@ -1095,4 +1095,4 @@ class TimeManagementCog(commands.Cog):
         
         from utils.user_data import save_user_email
         save_user_email(ctx.author.id, email, roles)
-        await ctx.send("✅ Email et rôles enregistrés avec succès !", ephemeral=True)
+        await ctx.send("✅ Email and roles saved successfully !", ephemeral=True)
