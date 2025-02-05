@@ -997,7 +997,7 @@ class TimeManagementCog(commands.Cog):
                 if channel:
                     mentions = " ".join(f"<@{uid}>" for uid in reminder['mentions']) if isinstance(reminder['mentions'], list) else "@everyone"
                     reminder_message += "\n"
-                    await channel.send(f"{reminder_message}\n{mentions}")
+                    await channel.send(f"{reminder_message}{mentions}")
         except Exception as e:
             print(f"An error happened when sending the reminder: {e}")
 
