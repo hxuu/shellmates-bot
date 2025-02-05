@@ -119,13 +119,14 @@ class FeedbackCog(commands.Cog):
     @commands.has_permissions(administrator=True)  # Restrict to admins
     @app_commands.describe(
         category="Filter feedback by category (e.g., reminder, scheduling, time-management, general)"
+        ,analyze="option to analyze previous feedbacks, defaults to false , to turn it to true type true"
     )
-    async def view_feedback(self, ctx, category: str = None):
+    async def view_feedback(self, ctx, category: str = None, analyze : str  = ""):
         """
         Command to view feedback and optionally analyze it.
         """
         # Check if the user included the 'analyze' flag
-        analyze = "analyze" in ctx.message.content.lower()
+        analyze = analyze.lower()
 
         try:
             # Check if the feedback file exists
@@ -174,7 +175,7 @@ class FeedbackCog(commands.Cog):
                     await ctx.send(response[i:i+2000], ephemeral=True)
 
             # Perform feedback analysis if analyze=True
-            if analyze:
+            if analyze == "true":
                 analysis_response = self.analyze_feedback(feedback_list, category)
                 await ctx.send(analysis_response, ephemeral=True)
 
@@ -182,6 +183,7 @@ class FeedbackCog(commands.Cog):
             await ctx.send("❌ An error occurred while fetching feedback.", ephemeral=True)
             print(f"Error viewing feedback: {e}")
 
+    
     def analyze_feedback(self, feedback_list, category=None):
         """
         Analyze feedback data and return a summary.
