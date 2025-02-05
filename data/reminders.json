@@ -1,3 +1,36 @@
 {
-    "REMINDERS": []
+    "REMINDERS": [
+        {
+            "id": "e913cb0b-6453-4b8d-8926-44c9f070863e",
+            "user_id": 1271676041139720305,
+            "username": "yasser_110365",
+            "channel_id": 1324284889998163968,
+            "title": "final rush",
+            "description": null,
+            "date": "2025-02-05",
+            "time": "19:54",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-05 19:49:39.064793"
+            ],
+            "main_time": "2025-02-05 19:54:39.064793"
+        },
+        {
+            "id": "eeb9b088-5f8f-4370-a21f-92e3bcdcdd05",
+            "user_id": 1271676041139720305,
+            "username": "yasser_110365",
+            "channel_id": 1324284889998163968,
+            "title": "final chase",
+            "description": null,
+            "date": "2025-02-06",
+            "time": "00:25",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-06 00:20:24.197394"
+            ],
+            "main_time": "2025-02-06 00:25:24.197394"
+        }
+    ]
 }
