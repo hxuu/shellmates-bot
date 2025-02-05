@@ -1,0 +1,74 @@
+[
+    {
+        "id": "455e3f3b-845d-41ab-b96a-0f7b9766842f",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "reminder",
+        "description": "\"The reminder system works great!\"",
+        "rating": 1,
+        "timestamp": "2025-02-04T21:16:19.284301"
+    },
+    {
+        "id": "4788958f-1f6e-404c-9860-a87cb5c04daa",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "reminder",
+        "description": "\"The reminder system works great!\"",
+        "rating": 2,
+        "timestamp": "2025-02-04T21:58:50.620643"
+    },
+    {
+        "id": "e795bc16-4180-40f4-8905-c0917d967930",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "reminder",
+        "description": "\"The reminder system works great!\"",
+        "rating": 4,
+        "timestamp": "2025-02-04T23:52:02.444626"
+    },
+    {
+        "id": "c4c53496-8358-43cc-96fe-31aa1b428d09",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "time-management",
+        "description": "\"The time management feature is very useful!\"",
+        "rating": 4,
+        "timestamp": "2025-02-05T01:17:40.712608"
+    },
+    {
+        "id": "b3e663ee-1391-410f-b34c-d6655dcbe3aa",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "general",
+        "description": "\"The bot is easy to use and user-friendly.\"",
+        "rating": 5,
+        "timestamp": "2025-02-05T01:18:30.967353"
+    },
+    {
+        "id": "3017de0a-11ef-4649-94a3-77ac75412e88",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "scheduling",
+        "description": "\"The scheduling feature is very helpful!\"",
+        "rating": 4,
+        "timestamp": "2025-02-05T01:20:06.290935"
+    },
+    {
+        "id": "eb132d63-7720-4edf-84ca-657f724f1fb7",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "reminder",
+        "description": "\"The reminder system works great!\"",
+        "rating": 5,
+        "timestamp": "2025-02-05T01:20:45.350372"
+    },
+    {
+        "id": "8a654176-0573-4dda-810f-1a9d1c7f60ec",
+        "user_id": 1021826945421410389,
+        "username": "nihad_mel",
+        "category": "general",
+        "description": "\"The bot is slow and sometimes unresponsive.\"",
+        "rating": 1,
+        "timestamp": "2025-02-05T02:06:31.842168"
+    }
+]

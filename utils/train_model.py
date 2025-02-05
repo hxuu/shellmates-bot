@@ -1,8 +1,7 @@
 import xgboost as xgb
 import pandas as pd
 import pickle
-from prepare_data import load_activity_data
-
+from utils.prepare_data import load_activity_data
 MODEL_PATH = './models/xgboost_model.pkl'
 
 #recap de ce qu'il fait ce code 

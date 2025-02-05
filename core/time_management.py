@@ -6,6 +6,11 @@ from discord.ext import commands
 from utils.reminders import load_reminders, save_reminders
 from utils.time_manager import *
 from utils.google_calendar import GoogleCalendarManager
+import json
+import os
+from discord.ui import View ,Button
+
+
 
 
 async def setup(bot):
@@ -574,3 +579,366 @@ class TimeManagementCog(commands.Cog):
         from utils.user_data import save_user_email
         save_user_email(ctx.author.id, email, roles)
         await ctx.send("✅ Email et rôles enregistrés avec succès !", ephemeral=True)
+
+
+
+# Star Rating View
+class StarRatingView(View):
+    """
+    A Discord view for star-based feedback ratings.
+    """
+    def __init__(self, ctx, category, description):
+        super().__init__(timeout=30)
+        self.ctx = ctx
+        self.category = category
+        self.description = description
+        self.rating = None
+
+    async def on_timeout(self):
+        await self.ctx.send("⏰ Feedback submission timed out. Please try again.")
+
+    @discord.ui.button(label="⭐", style=discord.ButtonStyle.secondary)
+    async def one_star(self, interaction: discord.Interaction, button: Button):
+        await self.handle_rating(interaction, 1)
+
+    @discord.ui.button(label="⭐⭐", style=discord.ButtonStyle.secondary)
+    async def two_stars(self, interaction: discord.Interaction, button: Button):
+        await self.handle_rating(interaction, 2)
+
+    @discord.ui.button(label="⭐⭐⭐", style=discord.ButtonStyle.secondary)
+    async def three_stars(self, interaction: discord.Interaction, button: Button):
+        await self.handle_rating(interaction, 3)
+
+    @discord.ui.button(label="⭐⭐⭐⭐", style=discord.ButtonStyle.secondary)
+    async def four_stars(self, interaction: discord.Interaction, button: Button):
+        await self.handle_rating(interaction, 4)
+
+    @discord.ui.button(label="⭐⭐⭐⭐⭐", style=discord.ButtonStyle.secondary)
+    async def five_stars(self, interaction: discord.Interaction, button: Button):
+        await self.handle_rating(interaction, 5)
+
+    async def handle_rating(self, interaction: discord.Interaction, rating: int):
+        self.rating = rating
+        self.stop()
+
+        # Save feedback
+        feedback_data = {
+            "id": str(uuid.uuid4()),
+            "user_id": self.ctx.author.id,
+            "username": self.ctx.author.name,
+            "category": self.category,
+            "description": self.description,
+            "rating": rating,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        try:
+            # Ensure the feedback.json file exists
+            if not os.path.exists("feedback.json"):
+                with open("feedback.json", "w") as f:
+                    json.dump([], f)  # Initialize with an empty list
+
+            # Load existing feedback
+            with open("feedback.json", "r") as f:
+                feedback_list = json.load(f)
+
+            # Append new feedback
+            feedback_list.append(feedback_data)
+
+            # Save updated feedback
+            with open("feedback.json", "w") as f:
+                json.dump(feedback_list, f, indent=4)
+
+            await interaction.response.send_message(
+                f"✅ Thank you for your feedback! You rated **{rating} stars** for **{self.category}**."
+            )
+        except Exception as e:
+            await interaction.response.send_message("❌ An error occurred while saving your feedback.")
+            print(f"Error saving feedback: {e}")
+            print(f"Feedback data: {feedback_data}")
+
+
+async def setup(bot):
+    """
+    Set up the TimeManagementCog for the bot.
+    """
+    await bot.add_cog(TimeManagementCog(bot))
+
+
+class TimeManagementCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.sent_notifications = set()
+        self.calendar_manager = GoogleCalendarManager()
+        self.calendar_manager.authenticate()
+
+    async def cog_load(self):
+        """
+        Start the reminder checker and feedback analysis tasks when the cog is loaded.
+        """
+        self.bot.loop.create_task(self.check_reminders())
+
+    async def check_reminders(self):
+        """
+        Enhanced background task for checking reminders.
+        """
+        print("Reminder checker started!")
+        await self.bot.wait_until_ready()
+
+        # Initialize notifications cache with TTL
+        from collections import OrderedDict
+        self.sent_notifications = OrderedDict()
+        NOTIFICATION_TTL = 3600  # 1 hour TTL for sent notifications
+
+        # Add metrics tracking
+        metrics = {
+            'processed_reminders': 0,
+            'sent_notifications': 0,
+            'errors': 0,
+            'cleanup_operations': 0
+        }
+
+        while True:
+            try:
+                current_time = datetime.now()
+                reminders = load_reminders()
+                reminders_to_remove = []
+                modified_reminders = []
+
+                # Batch process reminders
+                for reminder in reminders:
+                    try:
+                        # Add reminder status tracking
+                        reminder_status = {
+                            'id': reminder['id'],
+                            'processing_started': datetime.now(),
+                            'notifications_sent': 0,
+                            'errors': []
+                        }
+
+                        reminder_datetime = datetime.fromisoformat(reminder["main_time"])
+                        time_until_reminder = reminder_datetime - current_time
+
+                        # Optimize old reminder cleanup
+                        if time_until_reminder.total_seconds() < -300:  # 5 minutes past
+                            reminders_to_remove.append(reminder)
+                            continue
+
+                        # Process reminder times more efficiently
+                        all_times = [(reminder_datetime, 'main')] + [
+                            (datetime.fromisoformat(rt), 'early')
+                            for rt in reminder.get("reminder_times", [])
+                        ]
+
+                        for check_time, reminder_type in all_times:
+                            time_until = check_time - current_time
+                            seconds_until = time_until.total_seconds()
+
+                            # Skip if too far in future or too old
+                            if seconds_until > 3600:  # More than 1 hour away
+                                continue
+                            if seconds_until < -30:  # More than 30 seconds old
+                                continue
+
+                            notification_key = f"{reminder['id']}_{check_time.isoformat()}"
+
+                            # More precise timing window
+                            if -1 <= seconds_until <= 3 and notification_key not in self.sent_notifications:
+                                try:
+                                    await self.send_reminder(reminder, reminder_type == 'main')
+                                    self.sent_notifications[notification_key] = current_time
+                                    reminder_status['notifications_sent'] += 1
+                                    metrics['sent_notifications'] += 1
+
+                                    # Cleanup old notification keys
+                                    while len(self.sent_notifications) > 1000:  # Prevent unlimited growth
+                                        self.sent_notifications.popitem(last=False)
+
+                                except Exception as e:
+                                    reminder_status['errors'].append(str(e))
+                                    metrics['errors'] += 1
+                                    continue
+
+                        # Update reminder if modified
+                        if reminder.get('modified'):
+                            modified_reminders.append(reminder)
+
+                        metrics['processed_reminders'] += 1
+
+                    except Exception as e:
+                        print(f"Error processing reminder {reminder.get('id', 'unknown')}: {e}")
+                        metrics['errors'] += 1
+                        continue
+
+                # Batch update reminders
+                if reminders_to_remove or modified_reminders:
+                    new_reminders = [
+                        r for r in reminders
+                        if r not in reminders_to_remove
+                    ]
+
+                    # Update modified reminders
+                    for mod_reminder in modified_reminders:
+                        reminder_index = next(
+                            (i for i, r in enumerate(new_reminders)
+                             if r['id'] == mod_reminder['id']),
+                            None
+                        )
+                        if reminder_index is not None:
+                            new_reminders[reminder_index] = mod_reminder
+
+                    save_reminders(new_reminders)
+                    metrics['cleanup_operations'] += 1
+
+                # Cleanup expired notification keys
+                current_time = datetime.now()
+                self.sent_notifications = OrderedDict(
+                    (k, v) for k, v in self.sent_notifications.items()
+                    if (current_time - v).total_seconds() < NOTIFICATION_TTL
+                )
+
+                # Log metrics periodically
+                if metrics['processed_reminders'] % 100 == 0:
+                    print(f"Reminder Checker Metrics: {metrics}")
+
+            except Exception as e:
+                print(f"Critical error in reminder checker: {e}")
+                metrics['errors'] += 1
+
+            # Adaptive sleep time based on number of active reminders
+            sleep_time = min(30, max(5, len(reminders) // 10))
+            await asyncio.sleep(sleep_time)
+
+    @commands.hybrid_command(
+        name="feedback",
+        description="Submit feedback about the bot."
+    )
+    async def feedback(self, ctx, category: str, *, description: str):
+        """
+        Command to submit feedback about the bot.
+        """
+        VALID_CATEGORIES = ["reminder", "scheduling", "time-management", "general"]
+
+        if category.lower() not in VALID_CATEGORIES:
+            await ctx.send(f"❌ Invalid category. Please choose from: {', '.join(VALID_CATEGORIES)}.")
+            return
+
+        # Send star rating view
+        view = StarRatingView(ctx, category, description)
+        await ctx.send(
+            f"🌟 Please rate your experience with **{category}** (1-5 stars):",
+            view=view
+        )
+    @commands.hybrid_command(
+    name="view_feedback",
+    description="View feedback submitted by users. Optionally filter by category."
+)
+    @commands.has_permissions(administrator=True)  # Restrict to admins
+    async def view_feedback(self, ctx, category: str = None):
+     """
+    Command to view feedback and optionally analyze it.
+    """
+    # Check if the user included the 'analyze' flag
+     analyze = "analyze" in ctx.message.content.lower()
+
+     try:
+        
+        # Check if the feedback file exists
+        if not os.path.exists("feedback.json"):
+            with open("feedback.json", "w") as f:
+                json.dump([], f)  # Initialize with an empty list
+        try:
+
+        # Load feedback from the file
+          with open("feedback.json", "r") as f:
+             feedback_list = json.load(f)
+        except json.JSONDecodeError:
+            await ctx.send("❌ The feedback file is corrupted. Resetting it.", ephemeral=True)
+            with open("feedback.json", "w") as f:
+                json.dump([], f)
+            feedback_list = []
+
+        if not feedback_list:
+            await ctx.send("No feedback has been submitted yet.", ephemeral=True)
+            return
+
+        # Filter feedback by category 
+        if category:
+            feedback_list = [fb for fb in feedback_list if fb['category'].lower() == category.lower()]
+        if not feedback_list:
+            await ctx.send(f"No feedback found for category: {category}.", ephemeral=True)
+            return
+
+       
+        response = f"**Feedback Submitted{' (' + category + ')' if category else ''}:**\n\n"
+        for feedback in feedback_list:
+            response += (
+                f"⭐ **Rating:** {feedback['rating']} stars\n"
+                f"📋 **Category:** {feedback['category']}\n"
+                f"📝 **Description:** {feedback['description']}\n"
+                f"👤 **User:** {feedback['username']} (ID: {feedback['user_id']})\n"
+                f"🕒 **Timestamp:** {feedback['timestamp']}\n"
+                f"────────────────────\n"
+            )
+
+        # Send the feedback (split into multiple messages if too long)
+        if len(response) <= 2000:
+            await ctx.send(response, ephemeral=True)
+        else:
+            # Split the response into chunks of 2000 characters (Discord message limit)
+            for i in range(0, len(response), 2000):
+                await ctx.send(response[i:i+2000], ephemeral=True)
+
+        
+        if analyze:
+            analysis_response = self.analyze_feedback(feedback_list, category)
+            await ctx.send(analysis_response, ephemeral=True)
+
+     except Exception as e:
+        await ctx.send("❌ An error occurred while fetching feedback.", ephemeral=True)
+        print(f"Error viewing feedback: {e}")
+
+    
+
+
+    def analyze_feedback_data(self, feedback_list):
+        
+        total_feedback = len(feedback_list)
+        average_rating = sum(fb['rating'] for fb in feedback_list) / total_feedback
+
+        
+        analysis_response = (
+            f"📊 **Feedback Analysis:**\n\n"
+            f"📝 **Total Feedback:** {total_feedback}\n"
+            f"⭐ **Average Rating:** {average_rating:.2f} stars\n"
+        )
+
+        return analysis_response
+
+    @commands.hybrid_command(
+        name="analyse_feedback",
+        description="Analyse feedback data to provide insights."
+    )
+    @commands.has_permissions(administrator=True)  
+    async def analyse_feedback(self, ctx):
+       
+        try:
+            if not os.path.exists("feedback.json"):
+                await ctx.send("No feedback has been submitted yet.", ephemeral=True)
+                return
+
+            with open("feedback.json", "r") as f:
+                feedback_list = json.load(f)
+
+            if not feedback_list:
+                await ctx.send("No feedback has been submitted yet.", ephemeral=True)
+                return
+
+            response = self.analyze_feedback_data(feedback_list)
+
+           
+            await ctx.send(response, ephemeral=True)
+
+        except Exception as e:
+            await ctx.send("❌ An error occurred while analysing feedback.", ephemeral=True)
+            print(f"Error analysing feedback: {e}")

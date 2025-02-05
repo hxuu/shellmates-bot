@@ -1,3 +1,4 @@
+
 def setup(bot):
     # Un simple exemple de hybrid_command
     @bot.hybrid_command()
@@ -12,7 +13,9 @@ def setup(bot):
     async def say(ctx, *, message):
         await ctx.send(message)
         
-from predict import predict_best_reminder_time
+from utils.predict import predict_best_reminder_time
+from bot import bot
+
 
 @bot.command(name="best_time")
 async def best_time(ctx):
