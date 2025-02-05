@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import jeson
 from core import basic, time_management
 from extended import availability_pref
-
+from extended import feedback
 # Charger la configuration du bot
 bot_config = jeson.parse_json('./data/config.json')
 
@@ -40,6 +40,7 @@ async def main():
     async with bot:
         await availability_pref.setup(bot)
         await time_management.setup(bot)
+        await feedback.FeedbackCog.setup(bot)
         await bot.start(bot_config['BOT_TOKEN'])
 
 # Lancer le bot

@@ -1,3 +1,20 @@
 {
-    "REMINDERS": []
+    "REMINDERS": [
+        {
+            "id": "fca8693a-93be-42d6-86bc-de8d85f29137",
+            "user_id": 1271676041139720305,
+            "username": "yasser_110365",
+            "channel_id": 1324284889998163968,
+            "title": "final test",
+            "description": null,
+            "date": "2025-02-05",
+            "time": "23:23",
+            "mentions": "everyone",
+            "is_dm": false,
+            "reminder_times": [
+                "2025-02-05 23:18:18.020177"
+            ],
+            "main_time": "2025-02-05 23:23:18.020177"
+        }
+    ]
 }

@@ -875,10 +875,10 @@ class TimeManagementCog(commands.Cog):
             else:
                 notification_text = f"👥 Notification: {', '.join(f'<@{uid}>' for uid in mentioned_users) if mentioned_users else '@everyone'}"
                 response = (
-                f"✅ Event scheduled: {title}\n\n"
+                f"✅ Event scheduled: \"{title}\"\n\n"
                 f"📅 Date: {date} at {time}\n\n"
                 f"⏳ In approximately {formatted_time}\n\n"
-                f"Reminders scheduled:\n\n{reminder_times_text}\n\n"
+                f"Reminders scheduled:\n\n{reminder_times_text if reminder_times_text else  "The event starts soon"}\n\n"
                 f"{notification_text}\n\n"
                 f"📢 Reminders will be sent in {target_channel.mention}"
             )
@@ -978,7 +978,7 @@ class TimeManagementCog(commands.Cog):
                 )
             else:
                 reminder_message = (
-                    f"⏰ The event: {reminder['title']} starts now\n\n"
+                    f"⏰ The event: \"{reminder['title']}\" starts now\n\n"
                 )
             if(reminder.get('description')):
                 reminder_message += f"📝 Description: {reminder.get('description')}\n\n"
@@ -996,7 +996,7 @@ class TimeManagementCog(commands.Cog):
                 channel = self.bot.get_channel(reminder["channel_id"])
                 if channel:
                     mentions = " ".join(f"<@{uid}>" for uid in reminder['mentions']) if isinstance(reminder['mentions'], list) else "@everyone"
-                    reminder_message += "\n"
+                    # reminder_message += "\n"
                     await channel.send(f"{reminder_message}{mentions}")
         except Exception as e:
             print(f"An error happened when sending the reminder: {e}")
