@@ -18,7 +18,14 @@ Welcome to the **Discord Bot** project!
 ## **Project Features**
 - Set reminders for specific dates and times.
 - Schedule recurring tasks.
+- Ai powered time suggestions
+- Feedback and analysis for the bot
+- Google calendar API integratoin
+- Specific channels reminders
+- Disocrd DMs feature
 - Modular structure for easy feature extension.
+- Hybrid commands for an easier use
+- Good documentation for all the commands
 
 ---
 
